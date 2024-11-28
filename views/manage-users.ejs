@@ -1,0 +1,69 @@
+<link
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+  rel="stylesheet"
+/>
+
+
+<%- include ('layouts/header') %>
+<h1 class="table">Manage Users</h1>
+
+<!-- Add User Button -->
+<div class="add-user-container">
+  <a href="/admin/add-user" class="btn-add-user">+ Add User</a>
+</div>
+
+<table class="table">
+  <thead>
+    <th>id</th>
+    <th>email</th>
+    <th>role</th>
+  </thead>
+  <tbody>
+    <% users.forEach(user => { %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><a href="/admin/user/<%= user.id %>"><%= user.email %></a></td>
+        <td class="role-td">
+          <form
+            action="/admin/update-role"
+            method="post"
+            class="manage-user-form"
+            style="display: inline;"
+          >
+            <input type="hidden" name="id" value="<%= user.id %>" />
+            <div class="action-container">
+              <select name="role" id="role" class="role-dropdown">
+                <option value="ADMIN" <%= user.role === 'ADMIN' ? 'selected' : '' %>>Admin</option>
+                <option value="MODERATOR" <%= user.role === 'MODERATOR' ? 'selected' : '' %>>Moderator</option>
+                <option value="CLIENT" <%= user.role === 'CLIENT' ? 'selected' : '' %>>Client</option>
+              </select>
+              <input type="submit" value="Update" class="btn-update" />
+            </div>
+          </form>
+        
+          <form
+            action="/admin/delete-user"
+            method="post"
+            class="delete-user-form"
+            style="display: inline;"
+            onsubmit="return confirmDelete()"
+          >
+            <input type="hidden" name="id" value="<%= user.id %>" />
+            <button type="submit" class="btn-delete">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </form>
+        </td>
+        
+      </tr>
+      
+    <% }) %>
+  </tbody>
+</table>
+<script>
+  function confirmDelete() {
+    return confirm('Are you sure you want to remove the user from the database?');
+  }
+</script>
+
+<%- include ('layouts/footer') %>

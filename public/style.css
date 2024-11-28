@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,700;1,400;1,700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%; /* Ensure body stretches to full viewport height */
+  overflow: hidden; /* Prevent extra content from appearing */
+  /*background: linear-gradient(135deg, #a29bfe, #6c5ce7, #5f4eff);*/
+}
+
+body {
+  background: rgb(54,68,55);
+  font-family: 'Space Mono', monospace;
+  font-family: 'Open Sans', sans-serif;
+  
+  max-width: 100%;
+  margin: auto;
+  font-size: 1rem;
+  /*padding: 15px;*/
+}
+
+nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 1.2rem 12px;
+}
+
+nav > ul > li {
+  list-style: none;
+  display: inline-block;
+}
+
+nav > ul > li > a,
+a {
+  text-decoration: none;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 8px;
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease-in-out, background 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+nav > ul > li > a:hover,
+a:hover {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.3), rgba(243, 242, 242, 0.4));
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(95, 78, 255, 0.5);
+}
+
+
+h1.title {
+  text-align: center;
+  margin: 1rem;
+  text-decoration: underline;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 64px;
+}
+
+form.lg-form {
+  margin: 16px;
+  padding: 32px;
+  width: 100%;
+  max-width: 400px;
+  min-width: 350px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.lg-form label,
+.lg-form input {
+  display: block;
+  min-width: 100%;
+  margin: 8px 0px;
+}
+
+.lg-form label {
+  font-weight: bold;
+  color: #fff;
+}
+
+.lg-form input {
+  height: 44px;
+  border: none;
+  border-radius: 8px;
+  padding: 8px;
+  font-size: 1rem;
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.lg-form input[type='submit'] {
+  margin: 16px 0;
+  background-color: #5f4eff;
+  color: #fff;
+  cursor: pointer;
+  transition: transform 0.2s ease-in-out;
+}
+
+.lg-form input[type='submit']:hover {
+  transform: scale(1.05);
+}
+
+input:focus {
+  outline: none;
+  background-color: #fff;
+  border: 2px solid #f3f4f6;
+}
+
+div > p {
+  color: #fff;
+}
+
+div > p > a {
+  color: #a29bfe;
+  text-decoration: underline;
+}
+
+.messages .error {
+  background-color: #f87171;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+}
+
+.messages .success {
+  background-color: #6ee7b7;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.messages .warning {
+  background-color: #fcd34d;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.messages .info {
+  background-color: #93c5fd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/*### manage-user-form ### */
+/* General Table Styling */
+/* General Table Styling */
+.table {
+  width: 80%;
+  margin: auto;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+  border-radius: 16px; /* Rounded corners */
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+}
+
+/* Table Header Styling */
+.table thead th {
+  font-weight: bold;
+  text-transform: uppercase;
+  padding: 16px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3); /* Subtle bottom border */
+}
+
+/* Table Rows Styling */
+.table tbody tr {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1); /* Subtle horizontal borders */
+}
+
+.table tbody tr:last-child {
+  border-bottom: none; /* Remove border for the last row */
+}
+
+.table tbody td {
+  padding: 12px;
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* Vertical borders */
+}
+
+.table tbody td:last-child {
+  border-right: none; /* Remove right border for the last column */
+}
+
+/* Hyperlink Styling for Email */
+.table tbody td a {
+  color: #a29bfe;
+  text-decoration: none;
+  transition: color 0.3s ease-in-out, text-shadow 0.3s ease-in-out;
+}
+
+.table tbody td a:hover {
+  color: #fff;
+  text-shadow: 0 4px 15px rgba(162, 155, 254, 0.8);
+}
+
+/* Role Column: Ensure proper alignment */
+.role {
+  display: flex; /* Flexbox for side-by-side layout */
+  flex-direction: row; /* Arrange children in a row */
+  align-items: center; /* Vertical alignment */
+  gap: 10px; /* Space between dropdown and button */
+}
+
+/* Dropdown Styling */
+.manage-user-form select {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 1rem;
+  color: #110b45;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+/* Update Button Styling */
+.manage-user-form input[type="submit"] {
+  width: 100px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(95, 78, 255, 0.8);
+  color: #fff;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.manage-user-form input[type="submit"]:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 15px rgba(95, 78, 255, 0.5);
+}
+
+/* Highlighted Title */
+h1.table {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.3);
+  margin-bottom: 20px;
+}
+
+.add-user-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin:auto;
+  margin:0 0 10px 0;
+}
+
+
+/* Glassmorphism effect for ADD-USER */
+.form-card {
+  width: 100%;
+  max-width: 400px;
+  margin:  auto; /* Center form on the page */
+  padding: 20px;
+  border-radius: 15px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  color: #110b45;
+}
+
+.form-title {
+  text-align: center;
+  font-size: 1.8em;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  font-size: 0.9em;
+  margin-bottom: 5px;
+}
+
+input, select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #110b45;
+  font-size: 1em;
+}
+
+input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  background: #007bff;
+  color: #fff;
+  font-size: 1em;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.btn-submit:hover {
+  background: #0056b3;
+}
+
+
+/* Flex container for actions */
+.action-container {
+  display: flex;
+  align-items: center;
+  gap: 20px; /* Space between elements */
+}
+
+/* Dropdown styles */
+.role-dropdown {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Update button styles */
+.btn-update {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 5px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.btn-update:hover {
+  background-color: #45a049;
+}
+
+/* Delete button styles */
+.btn-delete {
+  background: none;
+  border-radius: 5px;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  font-size: 18px;
+  padding: px;
+  /*margin: 3px;*/
+}
+
+.btn-delete:hover {
+  color: #ff1a1a;
+}
+
+
+.role-td{
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  gap: 30px;
+}
+
