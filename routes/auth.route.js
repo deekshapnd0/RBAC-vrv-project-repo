@@ -70,18 +70,17 @@ router.post(
   }
 );
 
-router.get(
-  '/logout',
-  ensureLoggedIn({ redirectTo: '/' }),
-  async (req, res, next) => {
-    req.logout((err) => {
-      if (err) {
-        return next(err); // Handle any error during logout
-      }
-      res.redirect('/');
-    });
-  }
-);
+
+
+router.get('/logout', ensureLoggedIn({ redirectTo: '/' }), (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    res.redirect('/');
+  });
+});
+
 
 
 module.exports = router;
@@ -101,4 +100,3 @@ module.exports = router;
 //     next();
 //   }
 // }
-

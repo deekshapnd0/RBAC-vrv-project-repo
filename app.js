@@ -18,23 +18,18 @@ app.use(express.static('public'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Initialize MongoStore for session storage using `connect-mongo` version 4.x.x+
-const MongoStore = connectMongo.create({
-  mongoUrl: process.env.MONGODB_URI, // MongoDB URI
-  dbName: process.env.DB_NAME, // Database name
-  collectionName: 'sessions', // Optional: Customize session collection name
-});
-
-// Init Session with MongoStore
+const MongoStore = connectMongo(session);
+// Init Session
 app.use(
   session({
     secret: process.env.SESSION_SECRET,
     resave: false,
     saveUninitialized: false,
     cookie: {
+      // secure: true,
       httpOnly: true,
     },
-    store: MongoStore, // Store sessions in MongoDB using MongoStore
+    store: new MongoStore({ mongooseConnection: mongoose.connection }),
   })
 );
 
@@ -66,7 +61,7 @@ app.use(
 app.use(
   '/admin',
   ensureLoggedIn({ redirectTo: '/auth/login' }),
-  ensureAdmin, // Ensure only admins can access this route
+  ensureAdmin,
   require('./routes/admin.route')
 );
 
@@ -76,44 +71,51 @@ app.use((req, res, next) => {
 });
 
 // Error Handler
-app.use((error, req, res, next) => {
-  error.status = error.status || 500;
-  res.status(error.status);
-  res.render('error_40x', { error });
+// Centralized error handler
+app.use((err, req, res, next) => {
+  console.error(err.stack);  // Log the error stack to the console
+  res.status(err.status || 500).render('error', { error: err }); // Render an error page
 });
 
-// Connect to MongoDB
+
+// Setting the PORT
+const PORT = process.env.PORT || 3002;
+
+// Making a connection to MongoDB
 mongoose
   .connect(process.env.MONGODB_URI, {
     dbName: process.env.DB_NAME,
-    // useNewUrlParser: true,
-    // useUnifiedTopology: true,
+    
   })
   .then(() => {
-    console.log('💾 Connected to MongoDB...');
-    const PORT = process.env.PORT || 3003; // Port to listen on
-    app.listen(PORT, () => console.log(`🚀 Server running at http://localhost:${PORT}`));
+    console.log('💾 connected...');
+    // Listening for connections on the defined PORT
+    app.listen(PORT, () => console.log(`🚀 @ http://localhost:${PORT}`));
   })
-  .catch((err) => {
-    console.log('MongoDB connection error:', err.message);
-    process.exit(1); // Exit the process if MongoDB connection fails
-  });
+  .catch((err) => console.log(err.message));
 
-// Ensure only admin users can access the admin route
+// function ensureAuthenticated(req, res, next) {
+//   if (req.isAuthenticated()) {
+//     next();
+//   } else {
+//     res.redirect('/auth/login');
+//   }
+// }
+
 function ensureAdmin(req, res, next) {
-  if (req.user && req.user.role === roles.admin) {
+  if (req.user.role === roles.admin) {
     next();
   } else {
-    req.flash('warning', 'You are not authorized to see this route');
+    req.flash('warning', 'you are not Authorized to see this route');
     res.redirect('/');
   }
 }
 
-// Ensure user is logged in (for the user route)
-function ensureLoggedInCustom(req, res, next) {
-  if (req.isAuthenticated()) {
+function ensureModerator(req, res, next) {
+  if (req.user.role === roles.moderator) {
     next();
   } else {
-    res.redirect('/auth/login');
+    req.flash('warning', 'you are not Authorized to see this route');
+    res.redirect('/');
   }
 }

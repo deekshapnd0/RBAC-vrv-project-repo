@@ -2,15 +2,16 @@
   <h2>RBAC</h2>
   <ul>
     <li><a href="/">Home</a></li>
-    <% if (user) { %> <!-- Check if user exists -->
+    <% if (typeof user !== 'undefined' && user) { %>
       <li><a href="/user/profile">Profile</a></li>
-      <% if (user.role === 'ADMIN') { %> <!-- Check if user is admin -->
+      <% if (user.role === 'ADMIN') { %>
         <li><a href="/admin/users">Manage Users</a></li>
       <% } %>
       <li><a href="/auth/logout">Logout</a></li>
-    <% } else { %> <!-- If no user, show register/login links -->
+    <% } else { %>
       <li><a href="/auth/register">Register</a></li>
       <li><a href="/auth/login">Login</a></li>
     <% } %>
   </ul>
 </nav>
+

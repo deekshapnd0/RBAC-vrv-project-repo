@@ -1,82 +1,87 @@
-const User = require('../models/user.model');
-const router = require('express').Router();
+const express = require('express');
 const mongoose = require('mongoose');
+const User = require('../models/user.model');
 const { roles } = require('../utils/constants');
+const router = express.Router();
 
+// Helper function to validate ObjectId
+const isValidObjectId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+// Route to view all users
 router.get('/users', async (req, res, next) => {
   try {
     const users = await User.find();
-    // res.send(users);
     res.render('manage-users', { users });
   } catch (error) {
-    next(error);
+    next(error);  // Pass the error to the error handler middleware
   }
 });
 
+// Route to view a specific user's profile
 router.get('/user/:id', async (req, res, next) => {
   try {
     const { id } = req.params;
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      req.flash('error', 'Invalid id');
-      res.redirect('/admin/users');
-      return;
+
+    // Check if the ID is a valid ObjectId
+    if (!isValidObjectId(id)) {
+      req.flash('error', 'Invalid user ID');
+      return res.redirect('/admin/users');
     }
+
     const person = await User.findById(id);
+
+    // Check if user exists
+    if (!person) {
+      req.flash('error', 'User not found');
+      return res.redirect('/admin/users');
+    }
+
     res.render('profile', { person });
   } catch (error) {
     next(error);
   }
 });
 
+// Route to update a user's role
 router.post('/update-role', async (req, res, next) => {
   try {
     const { id, role } = req.body;
 
-    // Checking for id and roles in req.body
+    // Check if id and role are provided
     if (!id || !role) {
-      req.flash('error', 'Invalid request');
+      req.flash('error', 'Invalid request: id and role are required');
       return res.redirect('back');
     }
 
-    // Check for valid mongoose objectID
-    if (!mongoose.Types.ObjectId.isValid(id)) {
-      req.flash('error', 'Invalid id');
+    // Validate ObjectId and role
+    if (!isValidObjectId(id)) {
+      req.flash('error', 'Invalid user ID');
       return res.redirect('back');
     }
 
-    // Check for Valid role
     const rolesArray = Object.values(roles);
     if (!rolesArray.includes(role)) {
       req.flash('error', 'Invalid role');
       return res.redirect('back');
     }
 
-    // Admin cannot remove himself/herself as an admin
+    // Prevent admin from changing their own role
     if (req.user.id === id) {
-      req.flash(
-        'error',
-        'Admins cannot remove themselves from Admin, ask another admin.'
-      );
+      req.flash('error', 'You cannot change your own role');
       return res.redirect('back');
     }
 
-    // Finally update the user
-    const user = await User.findByIdAndUpdate(
-      id,
-      { role },
-      { new: true, runValidators: true }
-    );
+    // Update the user role
+    const user = await User.findByIdAndUpdate(id, { role }, { new: true, runValidators: true });
 
-    req.flash('info', `updated role for ${user.email} to ${user.role}`);
+    req.flash('info', `Updated role for ${user.email} to ${user.role}`);
     res.redirect('back');
   } catch (error) {
     next(error);
   }
 });
 
-module.exports = router;
-
-// Route to render the Add User page
+// Route to render Add User page
 router.get('/add-user', (req, res, next) => {
   try {
     res.render('add-user');
@@ -85,23 +90,24 @@ router.get('/add-user', (req, res, next) => {
   }
 });
 
-// Route to handle form submissions
+// Route to handle adding a new user
 router.post('/add-user', async (req, res, next) => {
   try {
     const { email, password, confirmPassword, role } = req.body;
 
-    // Validate input
+    // Validate input fields
     if (!email || !password || !confirmPassword || !role) {
       req.flash('error', 'All fields are required.');
       return res.redirect('/admin/add-user');
     }
 
+    // Check if passwords match
     if (password !== confirmPassword) {
       req.flash('error', 'Passwords do not match.');
       return res.redirect('/admin/add-user');
     }
 
-    // Check if the email already exists
+    // Check if the email is already in use
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       req.flash('error', 'Email is already in use.');
@@ -119,14 +125,13 @@ router.post('/add-user', async (req, res, next) => {
   }
 });
 
-
-// Delete user route
+// Route to delete a user
 router.post('/delete-user', async (req, res, next) => {
   try {
     const { id } = req.body;
 
     // Validate the ID
-    if (!id || !mongoose.Types.ObjectId.isValid(id)) {
+    if (!id || !isValidObjectId(id)) {
       req.flash('error', 'Invalid user ID.');
       return res.redirect('/admin/users');
     }
@@ -146,3 +151,5 @@ router.post('/delete-user', async (req, res, next) => {
     next(error);
   }
 });
+
+module.exports = router;

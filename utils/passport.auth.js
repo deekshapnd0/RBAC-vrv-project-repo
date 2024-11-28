@@ -17,7 +17,7 @@ passport.use(
             message: 'Username/email not registered',
           });
         }
-        // Email exist and now we need to verify the password
+        // Email exists and now we need to verify the password
         const isMatch = await user.isValidPassword(password);
         return isMatch
           ? done(null, user)
@@ -29,25 +29,16 @@ passport.use(
   )
 );
 
-
-
-// Serialize user ID to store in session
-passport.serializeUser((user, done) => {
-  done(null, user.id); // Store user ID in session
+passport.serializeUser(function (user, done) {
+  done(null, user.id);
 });
 
-// Deserialize user from session using async/await
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async function (id, done) {
   try {
-    // Use await to get the user from the database
-    const user = await User.findById(id).exec(); // Using exec() is optional but can be included if you want
-
-    if (!user) {
-      return done(new Error('User not found'), null);  // If user not found, pass an error
-    }
-
-    done(null, user);  // If user is found, pass it to done
+    const user = await User.findById(id);
+    done(null, user);
   } catch (err) {
-    done(err);  // If there's an error, pass it to done
+    done(err);
   }
 });
+
